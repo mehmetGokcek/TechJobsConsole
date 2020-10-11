@@ -58,12 +58,15 @@ namespace TechJobsConsole
                     Console.WriteLine("\nSearch term: ");
                     string searchTerm = Console.ReadLine();
 
+                    searchTerm = searchTermValidate(searchTerm); //custom method to validate input and make the searchTerm case insensitive 
+
                     List<Dictionary<string, string>> searchResults;
 
                     // Fetch results
                     if (columnChoice.Equals("all"))
                     {
-                        Console.WriteLine("Search all fields not yet implemented.");
+                        searchResults = JobData.FindByValue(searchTerm);
+                        PrintJobs(searchResults);
                     }
                     else
                     {
@@ -76,12 +79,13 @@ namespace TechJobsConsole
 
         /*
          * Returns the key of the selected item from the choices Dictionary
+         * A utility method that displays a menu of choices and returns the user’s selection.
          */
         private static string GetUserSelection(string choiceHeader, Dictionary<string, string> choices)
         {
             int choiceIdx;
             bool isValidChoice = false;
-            string[] choiceKeys = new string[choices.Count];
+            string[] choiceKeys = new string[choices.Count]; //will hold key values of choices Dictionary
 
             int i = 0;
             foreach (KeyValuePair<string, string> choice in choices)
@@ -96,13 +100,13 @@ namespace TechJobsConsole
 
                 for (int j = 0; j < choiceKeys.Length; j++)
                 {
-                    Console.WriteLine(j + " - " + choices[choiceKeys[j]]);
+                    Console.WriteLine(j + " - " + choices[choiceKeys[j]]); //iterate over the dictionary using keys to get values
                 }
 
                 string input = Console.ReadLine();
                 choiceIdx = int.Parse(input);
 
-                if (choiceIdx < 0 || choiceIdx >= choiceKeys.Length)
+                if (choiceIdx < 0 || choiceIdx >= choiceKeys.Length) //valid entry check
                 {
                     Console.WriteLine("Invalid choices. Try again.");
                 }
@@ -113,12 +117,76 @@ namespace TechJobsConsole
 
             } while (!isValidChoice);
 
-            return choiceKeys[choiceIdx];
+            return choiceKeys[choiceIdx]; //return the choosen key 
         }
 
+        /*This is meant to print a list of jobs to the console in a nicely formatted manner, 
+        but hasn’t been implemented yet.This will be part of your job.*/
         private static void PrintJobs(List<Dictionary<string, string>> someJobs)
         {
-            Console.WriteLine("PrintJobs is not implemented yet");
+
+            if (someJobs.Count != 0)
+            {
+
+                foreach (Dictionary<string, string> jobs in someJobs)
+                {
+                    Console.WriteLine($"\n*****");
+
+                    foreach (KeyValuePair<string, string> job in jobs)
+                    {
+
+                        Console.WriteLine($"{job.Key}: {job.Value}");
+
+                    }
+
+                    Console.WriteLine($"*****\n");
+
+                }
+
+                Console.WriteLine($"{someJobs.Count} results have been found!\n");
+            }
+
+            else {
+                Console.WriteLine("No Results!");
+            }
+        }
+
+        //Search Term validation and Case Sensitive Results
+        private static String searchTermValidate(String searchTerm)
+        {
+            String newSearchTerm = "";
+            if (searchTerm.Length <= 1 || searchTerm == null)
+            {
+                Console.WriteLine("Empty String");
+            }
+            else
+            {
+                int count = 0;
+                foreach (char letter in searchTerm)
+                {
+
+                    if (!Char.IsLetter(letter))
+                    { //check for non letter 
+                        newSearchTerm = newSearchTerm + letter;
+                    }
+                    else
+                    {
+                        count++; //keep track of first letter
+
+                        if (count == 1) //when the first letter comes
+                        {
+                            newSearchTerm = newSearchTerm + Char.ToUpper(letter); //make first letter uppercase
+                        }
+
+                        else
+                        {
+                            newSearchTerm = newSearchTerm + Char.ToLower(letter); //after first letter, all lowercase
+                        }
+                    }
+                }
+              
+            }
+            return newSearchTerm;
         }
     }
 }

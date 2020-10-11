@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -10,11 +12,27 @@ namespace TechJobsConsole
         static List<Dictionary<string, string>> AllJobs = new List<Dictionary<string, string>>();
         static bool IsDataLoaded = false;
 
-        public static List<Dictionary<string, string>> FindAll()
+        public static List<Dictionary<string, string>> FindAll() //Return a copy of AllJobs Array
         {
             LoadData();
-            return AllJobs;
+            List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
+
+            foreach (Dictionary<string, string> row in AllJobs)
+            {
+                foreach (KeyValuePair<string, string> job in row)
+                {
+                   
+                    Console.WriteLine("job: ",job.ToString());
+                    if (!jobs.Contains(row))
+                    { 
+                        jobs.Add(row);
+                    }
+                }
+            }
+            
+            return jobs;
         }
+
 
         /*
          * Returns a list of all values contained in a given column,
@@ -35,7 +53,38 @@ namespace TechJobsConsole
                     values.Add(aValue);
                 }
             }
+            values.Sort();
+
             return values;
+            
+        }
+
+        public static List<Dictionary<string, string>> FindByValue(string searchTerm)
+        {
+            // load data, if not already loaded
+            LoadData();
+
+            List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
+
+            foreach (Dictionary<string, string> row in AllJobs)
+            {
+                foreach (KeyValuePair<string, string> job in row)
+                {
+
+                    string aValue = job.Value;
+                    String aKey = job.Key;
+
+
+                    if (aValue.Contains(searchTerm) || aKey.Contains(searchTerm))
+                    {
+                        if (!jobs.Contains(row)) { //avoid duplicate resuts
+                            jobs.Add(row);
+                        }
+                    }
+                }
+            }
+            jobs.Sort();
+            return jobs;
         }
 
         public static List<Dictionary<string, string>> FindByColumnAndValue(string column, string value)
@@ -55,6 +104,7 @@ namespace TechJobsConsole
                 }
             }
 
+            jobs.Sort();
             return jobs;
         }
 
