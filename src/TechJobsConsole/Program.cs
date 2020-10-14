@@ -58,8 +58,6 @@ namespace TechJobsConsole
                     Console.WriteLine("\nSearch term: ");
                     string searchTerm = Console.ReadLine();
 
-                    searchTerm = searchTermValidate(searchTerm); //custom method to validate input and make the searchTerm case insensitive 
-
                     List<Dictionary<string, string>> searchResults;
 
                     // Fetch results
@@ -151,42 +149,5 @@ namespace TechJobsConsole
             }
         }
 
-        //Search Term validation and Case Sensitive Results
-        private static String searchTermValidate(String searchTerm)
-        {
-            String newSearchTerm = "";
-            if (searchTerm.Length <= 1 || searchTerm == null)
-            {
-                Console.WriteLine("Empty String");
-            }
-            else
-            {
-                int count = 0;
-                foreach (char letter in searchTerm)
-                {
-
-                    if (!Char.IsLetter(letter))
-                    { //check for non letter 
-                        newSearchTerm = newSearchTerm + letter;
-                    }
-                    else
-                    {
-                        count++; //keep track of first letter
-
-                        if (count == 1) //when the first letter comes
-                        {
-                            newSearchTerm = newSearchTerm + Char.ToUpper(letter); //make first letter uppercase
-                        }
-
-                        else
-                        {
-                            newSearchTerm = newSearchTerm + Char.ToLower(letter); //after first letter, all lowercase
-                        }
-                    }
-                }
-              
-            }
-            return newSearchTerm;
-        }
     }
 }

@@ -15,19 +15,17 @@ namespace TechJobsConsole
         public static List<Dictionary<string, string>> FindAll() //Return a copy of AllJobs Array
         {
             LoadData();
+
             List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
 
             foreach (Dictionary<string, string> row in AllJobs)
             {
-                foreach (KeyValuePair<string, string> job in row)
-                {
-                   
-                    Console.WriteLine("job: ",job.ToString());
+               
                     if (!jobs.Contains(row))
                     { 
-                        jobs.Add(row);
+                       jobs.Add(row);
                     }
-                }
+              
             }
             
             return jobs;
@@ -71,11 +69,11 @@ namespace TechJobsConsole
                 foreach (KeyValuePair<string, string> job in row)
                 {
 
-                    string aValue = job.Value;
-                    String aKey = job.Key;
+                    string aValue = job.Value.ToLower();
+                    String aKey = job.Key.ToLower();
 
 
-                    if (aValue.Contains(searchTerm) || aKey.Contains(searchTerm))
+                    if (aValue.Contains(searchTerm.ToLower()) || aKey.Contains(searchTerm.ToLower()))
                     {
                         if (!jobs.Contains(row)) { //avoid duplicate resuts
                             jobs.Add(row);
@@ -83,7 +81,6 @@ namespace TechJobsConsole
                     }
                 }
             }
-            jobs.Sort();
             return jobs;
         }
 
@@ -96,15 +93,14 @@ namespace TechJobsConsole
 
             foreach (Dictionary<string, string> row in AllJobs)
             {
-                string aValue = row[column];
+                string aValue = row[column].ToLower();
 
-                if (aValue.Contains(value))
+                if (aValue.Contains(value.ToLower()))
                 {
                     jobs.Add(row);
                 }
             }
 
-            jobs.Sort();
             return jobs;
         }
 
